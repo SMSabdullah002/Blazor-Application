@@ -1,0 +1,62 @@
+﻿@page "/fetchdata"
+@inject HttpClient Http
+@using WebApp.Model
+
+<h1>Dashboard</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Username. (C)</th>
+                <th>Email (F)</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Website</th>
+                <th>Company</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var field in forecasts)
+            {
+            <tr>
+                <td>@field.name</td>
+                <td>@field.username</td>
+                <td>@field.email</td>
+                <td>@field.address</td>
+                <td>@field.phone</td>
+                <td>@field.website</td>
+                <td>@field.company</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Dash[] forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<Dash[]>("https://jsonplaceholder.typicode.com/users");
+    }
+
+    public class WeatherForecast
+    {
+        public DateTime Date { get; set; }
+
+        public int TemperatureC { get; set; }
+
+        public string Summary { get; set; }
+
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+}
